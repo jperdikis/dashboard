@@ -20,18 +20,16 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          $(tag)
+    
+    - script: |
+        docker build -t my-container-image-name .
+      displayName: 'build Docker image'
+    
     - task: SnykSecurityScan@0
       inputs:
         serviceConnectionEndpoint: 'Snyk Pipelines Example Connection'
         testType: 'container'
-        dockerImageName: $(tag)
-        dockerfilePath: $(Build.SourcesDirectory)/Dockerfile
+        dockerImageName: 'my-container-image-name'
+        dockerfilePath: 'Dockerfile'
         monitorOnBuild: true
         failOnIssues: true
