@@ -27,3 +27,11 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         tags: |
           $(tag)
+    - task: SnykSecurityScan@0
+      inputs:
+        serviceConnectionEndpoint: 'Snyk Pipelines Example Connection'
+        testType: 'container'
+        dockerImageName: $(tag)
+        dockerfilePath: $(Build.SourcesDirectory)/Dockerfile
+        monitorOnBuild: true
+        failOnIssues: true
